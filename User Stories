@@ -3,25 +3,41 @@ Title: Account Creation
 Story: As a user, I want to create an account that can buy and sell. For admin purposes, the user will be given an account with administrative
 powers from the software engineers.
 
-ID: US-201
+ID: US-102
 Title: Browse products
-Story: As a customer, I want to browse product categories so that I can explore different items available for purchase.
+Story: As a user, I want to browse product categories so that I can explore different items available for purchase.
 
 ID: US-202
 Title: Add to cart
-Story: As a customer, I want to add items to my shopping cart so that I can purchase multiple products at once.
+Story: As a registered user, I want to add items to my shopping cart so that I can purchase multiple products at once.
 
 ID: US-203
 Title: Checkout
-Story: As a customer, I want to complete the checkout process so that I can buy the products in my cart.
+Story: As a registered user, I want to complete the checkout process so that I can buy the products in my cart.
 
 ID: US-204
 Title: Track order
-Story: As a customer, I want to track my order status so that I know when my purchase will be delivered.
+Story: As a registered user, I want to track my order status so that I know when my purchase will be delivered.
 
 ID: US-205
 Title: Write product review
-Story: As a customer, I want to write a review for a purchased product so that I can share my experience with others.
+Story: As a registered user, I want to write a review for a purchased product so that I can share my experience with others.
+
+ID: US-206
+Title: List products for sale
+Story: As a registered user, I want to add new products for sale so that customers can purchase them from the store.
+
+ID: US-207
+Title: Manage inventory
+Story: As a registered user, I want to update my inventory levels so that customers can see the availability of my products.
+
+ID: US-208
+Title: View sales reports
+Story: As a registered user, I want to access sales data so that I can analyze my performance over time.
+
+ID: US-209
+Title: Handle returns
+Story: As a registered user, I want to process return requests so that I can handle product returns efficiently.
 
 ID: US-301
 Title: Manage product listings
@@ -38,19 +54,3 @@ Story: As an admin, I want to manage customer support requests so that I can res
 ID: US-304
 Title: Manage promotions
 Story: As an admin, I want to create and update promotional offers so that I can boost sales during special events.
-
-ID: US-401
-Title: List products for sale
-Story: As a seller, I want to add new products for sale so that customers can purchase them from the store.
-
-ID: US-402
-Title: Manage inventory
-Story: As a seller, I want to update my inventory levels so that customers can see the availability of my products.
-
-ID: US-403
-Title: View sales reports
-Story: As a seller, I want to access sales data so that I can analyze my performance over time.
-
-ID: US-404
-Title: Handle returns
-Story: As a seller, I want to process return requests so that I can handle product returns efficiently.
