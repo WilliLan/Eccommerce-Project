@@ -18,16 +18,18 @@
 
 ## Project Description/Objective:
 ###	E-Commerce Website: CowbellCoffee
-		CowbellCoffee is an e-commerce website for coffee products. The platform will support listings for different categories of products within the coffee market. 
+
+	CowbellCoffee is an e-commerce website for coffee products. The platform will support listings for different categories of products within the coffee market. 
 		
-		When registering a user has a choice to select buyer account or seller account. The seller account is a business account to list their businesses' coffee products.
+	When registering, a user has a choice to select buyer account or seller account. The seller account is a business account to list their businesses' coffee products.
 ###	Features:
-		Unregistered Users are able to browse and compare products, along with being able to read verified customer reviews.
 
-		Registered Users: When registering a user has a choice to select buyer account or seller account
-			Buyer: Buyer accounts contain same functionalities as unregistered users along with being able to add products to cart and checkout.
-			Seller: Seller accounts contain the same functionalities as unregisterd users along with being able to list products to sale for their business.
+	Unregistered Users are able to browse and compare products, along with being able to read verified customer reviews.
 
-		Admin has the capability to monitor the platform and execute necessary powers.
+	Registered Users: When registering a user has a choice to select buyer account or seller account
+		Buyer: Buyer accounts contain same functionalities as unregistered users along with being able to add products to cart and checkout.
+		Seller: Seller accounts contain the same functionalities as unregisterd users along with being able to list products to sale for their business.
+
+	Admin has the capability to monitor the platform and execute necessary powers.
 
 
