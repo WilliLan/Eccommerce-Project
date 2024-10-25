@@ -9,6 +9,7 @@ class Category(models.Model):
     # Changes name to categories instead of categorys
     class Meta:
         verbose_name_plural = 'categories'
+        
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
