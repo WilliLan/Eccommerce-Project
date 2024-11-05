@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
-from . models import Product, Category
+from . models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout # Login, Logout Authentication
 from django.contrib import messages
 from django.contrib.auth.models import User # Register new user
 from django.contrib.auth.forms import UserCreationForm
-from . forms import SignUpForm
+from . forms import SignUpForm, UserInfoForm
 from django import forms
+
 
 def category(request, foo): # foo = category name
     # replace hyphens with spaces
@@ -44,14 +45,24 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
 
         # Successful Login
-        if user is not None: 
+        if user is not None:
             login(request, user)
-            messages.success(request, ("You Have Been Logged In"))
-            return redirect('home')
+            try: # Check if user has a profile - for admin (no profile)
+                profile = Profile.objects.get(user=user)
+                account_type = profile.account_type
+
+                # Redirect based on account type
+                if account_type == 'buyer':
+                    return redirect('home')  
+                elif account_type == 'seller':
+                    return redirect('about')  
+                
+            except Profile.DoesNotExist: # for admin (no profile)
+                    return redirect('http://127.0.0.1:8000/admin')  # edit redirect after hosted on web
         
         # Failed to login
         else:
-            messages.success(request, ("Either your email or password was incorrect. Try again please!"))
+            messages.error(request, ("Either your email or password was incorrect. Try again please!"))
             return redirect('login')
     else:
         return render(request, 'login.html', {})
@@ -73,13 +84,29 @@ def register_user(request):
             # login in user
             user=authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("You Have Registered Successfully"))
-            return redirect('home')
+            messages.success(request, ("You Have Registered Successfully - Please Fill Out Your Information Below"))
+            return redirect('update_info')
         
         else:
-            messages.success(request, ("Requirement(s) was violated, Please read carefully and Try again!"))
+            messages.error(request, ("Requirement(s) was violated, Please read carefully and Try again!"))
             return redirect('register')
         
     else:
         return render(request, 'register.html', {'form':form})
     
+def update_info(request):
+    if request.user.is_authenticated:
+        try:
+            current_user = Profile.objects.get(user__id=request.user.id)
+            form = UserInfoForm(request.POST or None, instance=current_user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("Your Information Has Been Updated"))
+                return redirect('home')
+            return render(request, 'update_info.html', {'form':form})
+        except Profile.DoesNotExist:
+            messages.error(request, ("You can't update your information"))
+            return redirect('home')
+    else:
+        messages.error(request, ("Please Login to Update Your Information"))
+        return redirect('login')
