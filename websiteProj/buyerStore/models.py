@@ -25,10 +25,13 @@ class Profile(models.Model):
     city = models.CharField(max_length=50, default='', blank=True)
     state = models.CharField(max_length=50, default='', blank=True)
     zipcode = models.CharField(max_length=10, default='', blank=True)
+    old_cart= models.CharField(max_length=200, blank=True, null=True)
     account_type = models.CharField(max_length=10, choices=ACCOUNT_CHOICES)
 
     def __str__(self):
-        return f"{self.user.username} Profile"
+        account_type = f"{self.account_type}" if self.account_type else "admin"
+        return f'{self.user.username} - {account_type}'
+    
 def create_profile(sender, instance, created, **kwargs):
     if created:
         user_profile = Profile(user=instance)

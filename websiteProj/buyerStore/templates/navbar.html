@@ -5,7 +5,16 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a></li>
+                {% if user.is_authenticated %}
+                    {% if user.profile.account_type == 'seller' %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'seller_dashboard' %}">Dashboard</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home'%}">Home</a></li>
+                    {% endif %}
+                {% else %}
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a></li>
+                {% endif %}
+                
                 <li class="nav-item"><a class="nav-link" href="{% url 'about'%}">About</a></li>
 
                 {% if not user.is_authenticated %}
@@ -13,51 +22,48 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                 {% endif %}
                 &nbsp
-                <li class="nav-item dropdown">
-                    
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Product Categories </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'home' %}">All Products</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Maker'%}">Coffee Maker</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Beans'%}">Coffee Beans</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Grounds'%}">Coffee Ground</a></li>
-                    </ul>
-                </li>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                {% if user.profile.account_type != 'seller' %}
+    
+                    <li class="nav-item dropdown">
+                        
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Product Categories </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{% url 'home' %}">All Products</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Maker'%}">Coffee Maker</a></li>
+                            <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Beans'%}">Coffee Beans</a></li>
+                            <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Grounds'%}">Coffee Ground</a></li>
+                        </ul>
+                    </li>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
                 
-                <form class="d-flex" method="GET" action="{% url 'product_search' %}">
-                    <div class="input-group">
-                        <input
-                            class="form-control" 
-                            type="search" 
-                            placeholder="Search Products" 
-                            aria-label="Search" 
-                            name="query" 
-                            style="outline: none; box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); border: 1px solid #ccc; transition: border-color 0.3s;"
-                            onfocus="this.style.borderColor='#007bff';" 
-                            onblur="this.style.borderColor='#ccc';"                        
-                        >
-                            <button class="btn btn-outline-secondary" type="submit">
-                            <i class="bi bi-search"></i> <!-- Magnifying glass icon -->
-                        </button>
-                    </div>
-                </form>
-                
-                
+                    <form class="d-flex" method="GET" action="{% url 'product_search' %}">
+                        <div class="input-group">
+                            <input
+                                class="form-control" 
+                                type="search" 
+                                placeholder="Search Products" 
+                                aria-label="Search" 
+                                name="query" 
+                                style="outline: none; box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); border: 1px solid #ccc; transition: border-color 0.3s;"
+                                onfocus="this.style.borderColor='#007bff';" 
+                                onblur="this.style.borderColor='#ccc';"                        
+                            >
+                                <button class="btn btn-outline-secondary" type="submit">
+                                <i class="bi bi-search"></i> <!-- Magnifying glass icon -->
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
             </ul>
             
-        
-            
-            
-
             {% if user.is_authenticated %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div>
                                 Hello, {{ user.username }}
                             </div>
-                            <small class="account-services"><strong>Settings</strong></small> <!-- Text right under Hello, admin -->
+                            <small class="account-services"><strong>Account-Settings</strong></small> <!-- Text right under Hello, admin -->
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             
