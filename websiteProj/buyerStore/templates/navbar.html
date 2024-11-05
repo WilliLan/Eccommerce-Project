@@ -8,12 +8,8 @@
                 <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'about'%}">About</a></li>
 
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'update_info' %}">Profile</a></li>
-                {% else %}
+                {% if not user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-
                     <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                 {% endif %}
                 &nbsp
@@ -28,12 +24,50 @@
                         <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Grounds'%}">Coffee Ground</a></li>
                     </ul>
                 </li>
+                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                
+                <form class="d-flex" method="GET" action="{% url 'product_search' %}">
+                    <div class="input-group">
+                        <input
+                            class="form-control" 
+                            type="search" 
+                            placeholder="Search Products" 
+                            aria-label="Search" 
+                            name="query" 
+                            style="outline: none; box-shadow: 0 0 4px rgba(0, 0, 0, 0.2); border: 1px solid #ccc; transition: border-color 0.3s;"
+                            onfocus="this.style.borderColor='#007bff';" 
+                            onblur="this.style.borderColor='#ccc';"                        
+                        >
+                            <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i> <!-- Magnifying glass icon -->
+                        </button>
+                    </div>
+                </form>
+                
+                
             </ul>
             
-            {% if user.is_authenticated %}
-                <strong>Welcome, {{ user.username }}&nbsp&nbsp&nbsp&nbsp&nbsp</strong>
-            {% endif %}
+        
             
+            
+
+            {% if user.is_authenticated %}
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div>
+                                Hello, {{ user.username }}
+                            </div>
+                            <small class="account-services"><strong>Settings</strong></small> <!-- Text right under Hello, admin -->
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            
+                            <li><a class="dropdown-item" href="{% url 'update_info' %}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </div>
+                    &nbsp&nbsp&nbsp&nbsp
+            {% endif %}
+
             <!-- Shopping Cart -->
             
             <form class="d-flex">

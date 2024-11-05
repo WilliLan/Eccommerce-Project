@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- Header-->
- <header class="bg-dark py-5">
+ <header class="bg-dark py-1">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">Login</h1>
@@ -22,6 +22,7 @@
                     <form method="POST" action="{% url 'login' %}">
                         {% csrf_token %}
                         <div class="mb-3">
+                          <p style="color:#9FA6B2">Username and Password are case sensitive.</p>  
                           <input type="text" class="form-control" name="username" placeholder="Enter Your Username">
                         </div>
                         <div class="mb-3">

@@ -110,3 +110,8 @@ def update_info(request):
     else:
         messages.error(request, ("Please Login to Update Your Information"))
         return redirect('login')
+    
+def product_search(request):
+    query = request.GET.get('query')
+    products = Product.objects.filter(name__icontains=query) if query else Product.objects.none()
+    return render(request, 'product_search.html', {'products': products, 'query': query})
