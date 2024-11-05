@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 import datetime
 
 class Category(models.Model):
@@ -9,7 +11,31 @@ class Category(models.Model):
     # Changes name to categories instead of categorys
     class Meta:
         verbose_name_plural = 'categories'
+
+class Profile(models.Model):
+    ACCOUNT_CHOICES = [
+        ('buyer', 'Buyer'),
+        ('seller', 'Seller')
+    ]
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=10, default='', blank=True)
+    address1 = models.CharField(max_length=100, default='', blank=True)
+    address2 = models.CharField(max_length=100, default='', blank=True)
+    city = models.CharField(max_length=50, default='', blank=True)
+    state = models.CharField(max_length=50, default='', blank=True)
+    zipcode = models.CharField(max_length=10, default='', blank=True)
+    account_type = models.CharField(max_length=10, choices=ACCOUNT_CHOICES)
+
+    def __str__(self):
+        return f"{self.user.username} Profile"
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile = Profile(user=instance)
+        user_profile.save()
+post_save.connect(create_profile, sender=User)
         
+
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
