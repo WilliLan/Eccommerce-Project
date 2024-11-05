@@ -6,6 +6,8 @@ from django.contrib.auth.models import User # Register new user
 from django.contrib.auth.forms import UserCreationForm
 from . forms import SignUpForm, UserInfoForm
 from django import forms
+import json
+from cart.cart import Cart # from folder cart -> cart.py -> class Cart
 
 
 def category(request, foo): # foo = category name
@@ -53,9 +55,22 @@ def login_user(request):
 
                 # Redirect based on account type
                 if account_type == 'buyer':
-                    return redirect('home')  
+                    current_user = Profile.objects.get(user__id=request.user.id)
+                    # Get their saved cart from db
+                    saved_cart = current_user.old_cart
+                    if saved_cart:
+                        # Convert string cart to dictionary using JSON
+                        converted_cart = json.loads(saved_cart)
+                        # Add the loaded cart dictionary to the session cart
+                        # get cart
+                        cart = Cart(request)
+                        # Loop thru the cart and add the items from the dictionary
+                        for key, value in converted_cart.items():
+                            cart.db_add(product_id=key, quantity=value)
+                    return redirect('home')
+                
                 elif account_type == 'seller':
-                    return redirect('about')  
+                    return redirect('seller_dashboard') 
                 
             except Profile.DoesNotExist: # for admin (no profile)
                     return redirect('http://127.0.0.1:8000/admin')  # edit redirect after hosted on web

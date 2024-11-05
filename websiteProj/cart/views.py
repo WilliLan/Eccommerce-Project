@@ -66,3 +66,6 @@ def cart_update(request):
         messages.success(request, "Cart Updated")
         return response
         # return redirect('cart_summary')
+
+def checkout(request):
+    return render(request, "checkout.html")

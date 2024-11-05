@@ -14,13 +14,16 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <br/>
-            
-            <form method="POST" action="{% url 'update_info' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <br/>
-                <button type="submit" class="btn btn-secondary"> Update Info </button>
-            </form>
+            <center>
+                <h2 style='color: #6c757d;'> Shipping Info </h2>
+                
+                <form method="POST" action="{% url 'update_info' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <br/>
+                    <button type="submit" class="btn btn-secondary"> Update Info </button>
+                </form>
+            </center>
             <br/>
             <br/>
         </div>
