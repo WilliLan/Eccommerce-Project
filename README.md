@@ -11,7 +11,7 @@
 
 	Robert Fleming | AppleRadium | Back-End-Dev
 
-	Rym Oulad Ali | Rymouxi | DBA
+	Rym Oulad Ali | Rymouxi | DBA/Tester
 
 ## Languages:
 	Python-Django/HTML/CSS/PostgreSQL

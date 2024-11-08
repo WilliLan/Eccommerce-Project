@@ -16,6 +16,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# settings.py
+
+
 
 # Application definition
 
@@ -28,6 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'buyerStore',
     'cart',
+    'buyerCheckout',
+    'sellerDashboard',
 ]
 
 MIDDLEWARE = [

@@ -1,11 +1,22 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
+        
         <a class="navbar-brand" href="{% url 'home' %}" style="color:maroon;">CowbellCoffee</a>
+        
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home'%}">Home</a></li>
+
+                {% if user.is_authenticated %}
+                    {% if user.profile.account_type != 'seller' %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home'%}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'seller_dashboard' %}">Dashboard</a></li>
+                    {% endif %}
+                {% endif %}
+                
                 <li class="nav-item"><a class="nav-link" href="{% url 'about'%}">About</a></li>
 
                 {% if not user.is_authenticated %}
@@ -13,6 +24,8 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                 {% endif %}
                 &nbsp
+                
+    
                 <li class="nav-item dropdown">
                     
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> Product Categories </a>
@@ -25,7 +38,7 @@
                     </ul>
                 </li>
                 &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                
+            
                 <form class="d-flex" method="GET" action="{% url 'product_search' %}">
                     <div class="input-group">
                         <input
@@ -43,42 +56,45 @@
                         </button>
                     </div>
                 </form>
-                
-                
+
             </ul>
             
-        
-            
-            
-
             {% if user.is_authenticated %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <div>
                                 Hello, {{ user.username }}
                             </div>
-                            <small class="account-services"><strong>Settings</strong></small> <!-- Text right under Hello, admin -->
+                            <small class="account-services"><strong>Account-Settings</strong></small> <!-- Text right under Hello, admin -->
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            
-                            <li><a class="dropdown-item" href="{% url 'update_info' %}">Profile</a></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                        </ul>
+                        {% if user.profile.account_type == 'seller' %}
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        {% else %}
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'update_info' %}">Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'order_history' %}">Orders</a></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            </ul>
+                        {% endif %}
                     </div>
                     &nbsp&nbsp&nbsp&nbsp
             {% endif %}
 
             <!-- Shopping Cart -->
-            
-            <form class="d-flex">
-                
-                <a 
-                    href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity"> {{ cart|length }} </span>
-                </a>
-            </form>
+            {% if user.profile.account_type != 'seller' %}
+
+                <form class="d-flex">
+                    
+                    <a 
+                        href="{% url 'cart_summary' %}" class="btn btn-outline-dark">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity"> {{ cart|length }} </span>
+                    </a>
+                </form>
+            {% endif %}
         </div>
     </div>
 </nav>

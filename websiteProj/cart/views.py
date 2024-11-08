@@ -3,6 +3,8 @@ from . cart import Cart # Cart Class
 from buyerStore.models import Product
 from django.http import JsonResponse
 from django.contrib import messages
+from django.shortcuts import redirect
+from django.contrib.auth.models import User
 
 
 def cart_summary(request):
@@ -11,6 +13,9 @@ def cart_summary(request):
     cart_products = cart.get_prods
     quantities = cart.get_quants
     totals = cart.cart_total()
+    if request.user.profile.account_type == 'seller':
+        messages.error(request, "You are not authorized to access this page")
+        return redirect('home')
     return render(request, "cart_summary.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals})
 
 
@@ -66,3 +71,5 @@ def cart_update(request):
         messages.success(request, "Cart Updated")
         return response
         # return redirect('cart_summary')
+
+    
