@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from . models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout # Login, Logout Authentication
 from django.contrib import messages
@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from . forms import SignUpForm, UserInfoForm
 from django import forms
 import json
+from buyerCheckout.models import Order, OrderItem
 from cart.cart import Cart # from folder cart -> cart.py -> class Cart
 
 
@@ -59,18 +60,26 @@ def login_user(request):
                     # Get their saved cart from db
                     saved_cart = current_user.old_cart
                     if saved_cart:
-                        # Convert string cart to dictionary using JSON
-                        converted_cart = json.loads(saved_cart)
-                        # Add the loaded cart dictionary to the session cart
-                        # get cart
-                        cart = Cart(request)
-                        # Loop thru the cart and add the items from the dictionary
-                        for key, value in converted_cart.items():
-                            cart.db_add(product_id=key, quantity=value)
+                        try:
+                            # Convert string cart to dictionary using JSON
+                            converted_cart = json.loads(saved_cart)
+                            # Add the loaded cart dictionary to the session cart
+                            cart = Cart(request)
+                            # Loop through the cart and add the items from the dictionary
+                            for key, value in converted_cart.items():
+                                cart.db_add(product_id=key, quantity=value)
+                        except json.JSONDecodeError:
+                            pass
                     return redirect('home')
                 
                 elif account_type == 'seller':
-                    return redirect('seller_dashboard') 
+                    if profile.approved == True:
+                        return redirect('seller_dashboard') 
+                    else:
+                        logout(request)
+                        messages.error(request, ("Your account is not approved yet. Please wait for an Admin to approve your account."))
+                        return redirect('home')
+                
                 
             except Profile.DoesNotExist: # for admin (no profile)
                     return redirect('http://127.0.0.1:8000/admin')  # edit redirect after hosted on web
@@ -91,16 +100,26 @@ def register_user(request):
     form = SignUpForm()
     if request.method == "POST":
         form = SignUpForm(request.POST) # Take all info they put on the signup form and put into backend
+        acc_type = form.data['account_type']
+
         if form.is_valid():
             form.save()
             username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
 
-            # login in user
+            
             user=authenticate(username=username, password=password)
-            login(request, user)
-            messages.success(request, ("You Have Registered Successfully - Please Fill Out Your Information Below"))
-            return redirect('update_info')
+            
+            if acc_type == 'seller':
+                user.profile.approved = False
+                user.profile.save()
+                messages.success(request, ("Admin will review this request. You will be notified status via email."))
+                return redirect('home')
+
+            elif acc_type == 'buyer':
+                login(request, user)
+                messages.success(request, ("You Have Registered Successfully - Please Fill Out Your Information Below"))
+                return redirect('update_info')
         
         else:
             messages.error(request, ("Requirement(s) was violated, Please read carefully and Try again!"))
@@ -130,3 +149,19 @@ def product_search(request):
     query = request.GET.get('query')
     products = Product.objects.filter(name__icontains=query) if query else Product.objects.none()
     return render(request, 'product_search.html', {'products': products, 'query': query})
+
+def order_history(request):
+    if request.user.is_authenticated:
+        try:
+
+            orders = Order.objects.filter(user__id=request.user.id)
+            
+            print(orders)
+            return render(request, 'order_history.html', {'orders': orders})
+        except Order.DoesNotExist:
+            #return render(request, 'order_history.html', {})
+            pass
+
+    else:
+        messages.error(request, ("Please Login to View Your Order History"))
+        return redirect('login')

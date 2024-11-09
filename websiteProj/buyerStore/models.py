@@ -27,6 +27,8 @@ class Profile(models.Model):
     zipcode = models.CharField(max_length=10, default='', blank=True)
     old_cart= models.CharField(max_length=200, blank=True, null=True)
     account_type = models.CharField(max_length=10, choices=ACCOUNT_CHOICES)
+    approved = models.BooleanField(default=True)
+
 
     def __str__(self):
         account_type = f"{self.account_type}" if self.account_type else "admin"
