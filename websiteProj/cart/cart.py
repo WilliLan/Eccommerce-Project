@@ -8,11 +8,11 @@ class Cart():
 
         # Get the current session key if it exists
         # Returning user
-        cart = self.session.get('session_key')
+        cart = self.session.get('cart_session_key')
 
         # If user is new, no session key. Create one.
-        if 'session_key' not in request.session:
-            cart = self.session['session_key'] = {}
+        if 'cart_session_key' not in request.session:
+            cart = self.session['cart_session_key'] = {}
 
         # Make sure cart is available on all pages of site
         self.cart = cart
@@ -61,6 +61,8 @@ class Cart():
             current_user.update(old_cart=str(cart_edit))
 
     def __len__(self):
+        if len(self.cart) == 0:
+            return 0
         return len(self.cart)
     
     def get_prods(self):
@@ -103,6 +105,21 @@ class Cart():
         updatedCart = self.cart
         return updatedCart
 
+    def clear(self):
+        # Clear cart
+        self.cart = {}
+        self.session.modified = True
+
+        # Deal with logged in user
+        if self.request.user.is_authenticated:
+            # Get user profile
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            cart_edit = self.cart.clear()
+            # Save cart_edit to profile
+            current_user.update(old_cart=str(cart_edit))
+            
+        
+
     def delete(self, product):
         product_id = str(product)
         # Delete from dictionary/cart
@@ -123,6 +140,25 @@ class Cart():
 
 
     def cart_total(self):
+        # Get product IDS
+        product_ids = self.cart.keys()
+        # Lookup keys in products DB model
+        products = Product.objects.filter(id__in=product_ids)
+        # Get quantities
+        quantities = self.cart
+        # Start counting at 0
+        total = 0
+        for key, value in quantities.items():
+            # Convert key string into int to do math
+            key = int(key)
+            for product in products:
+                if product.id == key and product.is_sale:
+                    total = total + (product.sale_price * value)
+                elif product.id == key and not product.is_sale:
+                    total = total + (product.price * value)
+        return total
+
+    def cart_item_prices(self):
         # Get product IDS
         product_ids = self.cart.keys()
         # Lookup keys in products DB model
