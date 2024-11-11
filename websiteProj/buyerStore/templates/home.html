@@ -7,16 +7,29 @@
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
             <h1 class="display-4 fw-bolder">All Products</h1>
-            <p class="lead fw-normal text-white-50 mb-0"></p>
         </div>
     </div>
 </header>
 
 <!-- Section-->
-<section class="py-5">
+<section class="py-1">
     <div class="container px-4 px-lg-5 mt-5">
-        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        <div style="text-align:right">
+            <form id="filterForm" method="POST" action="{% url 'home' %}">
+                {% csrf_token %}
+                <label for="filter">Filter By:</label>
+                <select id="filter" name="filter" style="border-radius: 4px;" onchange="document.getElementById('filterForm').submit();">
+                    <option value="default">All</option>
+                    <option value="option1" {% if filter_option == "option1" %}selected{% endif %}>Price: Low to High</option>
+                    <option value="option2" {% if filter_option == "option2" %}selected{% endif %}>Price: High to Low</option>
+                    <option value="option3" {% if filter_option == "option3" %}selected{% endif %}>On Sale</option>
+                </select>
+            </form>
+        </div>
         
+        <br/>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            
             {% for product in products %}
                 <div class="col mb-5">
                     <div class="card h-100">
@@ -58,3 +71,4 @@
     </div>
 </section>
 {% endblock %}
+

@@ -32,7 +32,26 @@ def product(request, pk):
 
 def home(request):
     products = Product.objects.all()
-    return render(request, 'home.html', {'products':products})
+    filter_option = None
+    if request.method == "POST":
+        filter_option = request.POST.get('filter')
+        if filter_option == "option1":  # Price: Low to High
+            
+            products = sorted(
+                products,
+                key=lambda p: p.sale_price if p.is_sale else p.price
+            )
+        elif filter_option == "option2":  # Price: High to Low
+            
+            products = sorted(
+                products,
+                key=lambda p: p.sale_price if p.is_sale else p.price,
+                reverse=True
+            )
+        elif filter_option == "option3":  # On Sale
+            products = Product.objects.filter(is_sale=True)
+    
+    return render(request, 'home.html', {'products':products, 'filter_option':filter_option})
 
 def about(request):
     return render(request, 'about.html', {})
@@ -50,39 +69,39 @@ def login_user(request):
         # Successful Login
         if user is not None:
             login(request, user)
-            try: # Check if user has a profile - for admin (no profile)
-                profile = Profile.objects.get(user=user)
-                account_type = profile.account_type
+            # Check if user has a profile
+            profile = Profile.objects.get(user=user)
+            account_type = profile.account_type
 
-                # Redirect based on account type
-                if account_type == 'buyer':
-                    current_user = Profile.objects.get(user__id=request.user.id)
-                    # Get their saved cart from db
-                    saved_cart = current_user.old_cart
-                    if saved_cart:
-                        try:
-                            # Convert string cart to dictionary using JSON
-                            converted_cart = json.loads(saved_cart)
-                            # Add the loaded cart dictionary to the session cart
-                            cart = Cart(request)
-                            # Loop through the cart and add the items from the dictionary
-                            for key, value in converted_cart.items():
-                                cart.db_add(product_id=key, quantity=value)
-                        except json.JSONDecodeError:
-                            pass
+            # Redirect based on account type
+            if account_type == 'buyer':
+                current_user = Profile.objects.get(user__id=request.user.id)
+                # Get their saved cart from db
+                saved_cart = current_user.old_cart
+                if saved_cart:
+                    try:
+                        # Convert string cart to dictionary using JSON
+                        converted_cart = json.loads(saved_cart)
+                        # Add the loaded cart dictionary to the session cart
+                        cart = Cart(request)
+                        # Loop through the cart and add the items from the dictionary
+                        for key, value in converted_cart.items():
+                            cart.db_add(product_id=key, quantity=value)
+                    except json.JSONDecodeError:
+                        pass
+                return redirect('home')
+            
+            elif account_type == 'seller':
+                if profile.approved == True:
+                    return redirect('seller_dashboard') 
+                else:
+                    logout(request)
+                    messages.error(request, ("Your account is not approved yet. Please wait for an Admin to approve your account."))
                     return redirect('home')
-                
-                elif account_type == 'seller':
-                    if profile.approved == True:
-                        return redirect('seller_dashboard') 
-                    else:
-                        logout(request)
-                        messages.error(request, ("Your account is not approved yet. Please wait for an Admin to approve your account."))
-                        return redirect('home')
-                
-                
-            except Profile.DoesNotExist: # for admin (no profile)
-                    return redirect('http://127.0.0.1:8000/admin')  # edit redirect after hosted on web
+            else: # admin
+                return redirect('home')
+
+            
         
         # Failed to login
         else:
@@ -130,6 +149,9 @@ def register_user(request):
     
 def update_info(request):
     if request.user.is_authenticated:
+        if request.user.profile.account_type == 'seller':
+            messages.error(request, ("You are not allowed to view this page"))
+            return redirect('home')
         try:
             current_user = Profile.objects.get(user__id=request.user.id)
             form = UserInfoForm(request.POST or None, instance=current_user)
@@ -152,6 +174,9 @@ def product_search(request):
 
 def order_history(request):
     if request.user.is_authenticated:
+        if request.user.profile.account_type == 'seller':
+            messages.error(request, ("You are not allowed to view this page"))
+            return redirect('home')
         try:
 
             orders = Order.objects.filter(user__id=request.user.id)
@@ -165,3 +190,12 @@ def order_history(request):
     else:
         messages.error(request, ("Please Login to View Your Order History"))
         return redirect('login')
+"""
+def order_details(request, pk):
+    order = Order.objects.get(id=pk)
+    order_items = OrderItem.objects.filter(order=order)
+    return render(request, 'order_details.html', {'order': order, 'order_items': order_items})
+"""
+
+
+    

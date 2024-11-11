@@ -13,9 +13,11 @@ def cart_summary(request):
     cart_products = cart.get_prods
     quantities = cart.get_quants
     totals = cart.cart_total()
-    if request.user.profile.account_type == 'seller':
-        messages.error(request, "You are not authorized to access this page")
-        return redirect('home')
+    if request.user.is_authenticated:
+        user = User.objects.get(username=request.user)
+        if user.profile.account_type == 'seller':
+            messages.error(request, "You are not authorized to access this page")
+            return redirect('home')
     return render(request, "cart_summary.html", {"cart_products":cart_products, "quantities":quantities, "totals":totals})
 
 

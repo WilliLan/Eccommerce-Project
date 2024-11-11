@@ -8,6 +8,7 @@ from django.contrib import messages
 from buyerCheckout.forms import PaymentForm
 
 def checkout(request):
+    
     cart = request.session.get('cart', {})
     cart = Cart(request)
 
@@ -22,6 +23,7 @@ def checkout(request):
         return redirect('cart_summary')
 
     if request.user.is_authenticated:
+        
         try:
             profile = Profile.objects.get(user=request.user)
             profile_data = {

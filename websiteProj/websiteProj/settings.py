@@ -1,9 +1,13 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environmental variables
+load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -15,10 +19,9 @@ SECRET_KEY = 'django-insecure-4w7(+66*nc50$76bs!2xb#_&-#l+u@u7lf)j-rv13rl9dud(pz
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
 
 # settings.py
-
-
 
 # Application definition
 
@@ -33,6 +36,7 @@ INSTALLED_APPS = [
     'cart',
     'buyerCheckout',
     'sellerDashboard',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -43,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'websiteProj.urls'
@@ -72,8 +77,14 @@ WSGI_APPLICATION = 'websiteProj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'autorack.proxy.rlwy.net',
+        'PORT':'17185' ,
     }
 }
 
@@ -114,6 +125,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = ['static/']
+
+# white noise static stuff
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/' # uploaded images go to media directory
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # find url that is base_dir add media directory onto that and puts the images into media dir

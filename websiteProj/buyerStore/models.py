@@ -62,6 +62,11 @@ class Product(models.Model):
     is_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     
+     # Seller
+     # related_name='products': Adds a reverse relationship, allowing access all products of a seller with user.products.all().
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', default=1) 
+
+
 
     def __str__(self):
         return self.name

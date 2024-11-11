@@ -6,7 +6,7 @@
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-2">
 
                 {% if user.is_authenticated %}
                     {% if user.profile.account_type != 'seller' %}
@@ -23,7 +23,7 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
                 {% endif %}
-                &nbsp
+                
                 
     
                 <li class="nav-item dropdown">
@@ -34,11 +34,11 @@
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Maker'%}">Coffee Maker</a></li>
                         <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Beans'%}">Coffee Beans</a></li>
-                        <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Grounds'%}">Coffee Ground</a></li>
+                        <li><a class="dropdown-item" href="{% url 'category' 'Coffee-Ground'%}">Coffee Ground</a></li>
                     </ul>
                 </li>
-                &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            
+                
+                &nbsp&nbsp
                 <form class="d-flex" method="GET" action="{% url 'product_search' %}">
                     <div class="input-group">
                         <input
@@ -58,7 +58,7 @@
                 </form>
 
             </ul>
-            
+            &nbsp&nbsp
             {% if user.is_authenticated %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -79,7 +79,7 @@
                             </ul>
                         {% endif %}
                     </div>
-                    &nbsp&nbsp&nbsp&nbsp
+                    &nbsp&nbsp
             {% endif %}
 
             <!-- Shopping Cart -->
