@@ -18,8 +18,8 @@ SECRET_KEY = 'django-insecure-4w7(+66*nc50$76bs!2xb#_&-#l+u@u7lf)j-rv13rl9dud(pz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app']
-CSRF_TRUSTED_ORIGINS = ['https://group2-production.up.railway.app']
+ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app', 'cowbellcoffee.store', 'https://cowbellcoffee.store']
+CSRF_TRUSTED_ORIGINS = ['https://group2-production.up.railway.app', 'https://cowbellcoffee.store']
 
 # settings.py
 
