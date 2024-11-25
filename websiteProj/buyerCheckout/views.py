@@ -83,8 +83,8 @@ def checkout(request):
                     del request.session[key]
         else:
             request.session.flush()
-        Order.paid = True
-        Order.save()
+        order.paid = True
+        order.save()
         return render(request, 'buyerCheckout/payment_success.html', {'order_id': order.id, 'totals': order.total, 'cart_products': cart_products, 'quantities': quantities})
 
     context = {
