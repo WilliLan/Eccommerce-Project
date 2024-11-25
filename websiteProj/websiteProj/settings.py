@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-4w7(+66*nc50$76bs!2xb#_&-#l+u@u7lf)j-rv13rl9dud(pz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app', 'cowbellcoffee.store', 'https://cowbellcoffee.store']
+ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app', 'cowbellcoffee.store', 'https://cowbellcoffee.store','127.0.0.1' ]
 CSRF_TRUSTED_ORIGINS = ['https://group2-production.up.railway.app', 'https://cowbellcoffee.store']
 
 # settings.py
@@ -79,6 +79,7 @@ DATABASES = {
     'default': {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': BASE_DIR / 'db.sqlite3',
+        
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Chicago'
 
 USE_I18N = True
 

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Header-->
+{% if order_id %}
+<header class="bg-dark py-1">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Order Summary for #{{ order_id }}</h1>
+            <p class="lead fw-normal text-white-50 mb-0"></p>
+        </div>
+    </div>
+</header>
+</br></br>
+
+<div class="container">
+    <div class="row">
+        <!-- Card for Order Summary -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Shipping Info</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zipcode</th>
+                                <th>Order-Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ order_info.fullname }}</td>
+                                <td>{{ order_info.address }}</td>
+                                <td>{{ order_info.city }}</td>
+                                <td>{{ order_info.state }}</td>
+                                <td>{{ order_info.zipcode }}</td>
+                                <td>{{ order_info.created_at }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card for Order Items -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Order Items</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Order-Item-ID</th>
+                                <th>QTY</th>
+                                <th>Tracking#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order_item in order_items %}
+                            <tr>
+                                <td>{{ order_item.product.name }}</td>
+                                <td>{{ order_item.id }}</td>
+                                <td>{{ order_item.quantity }}</td>
+                                <td>{% if order_item.seller_ship %}{{order_item.tracking_number}}{% else %}Pending{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Back to Dashboard Button -->
+     <br/>
+    <div class="text-center">
+        <a href="{% url 'seller_dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+</div>
+
+<br/><br/>
+{% else %} <!-- If order_id is not present -->
+    <script>
+        window.onload = function() {
+            window.location.href = "{% url 'home' %}";
+        };
+    </script>
+{% endif %}
+
+{% endblock %}

@@ -33,7 +33,7 @@
                             <!-- Product name-->
                             <h5 class="fw-bolder">{{ product.name }}</h5>
                             {% if product.is_sale %}
-                                <strike>${{ product.price }}</strike> ${{ product.sale_price }}
+                                <strike>${{ product.price }}</strike>${{ product.sale_price }}</span>
                             {% else %}
                                 ${{ product.price }}
                             {% endif %}
@@ -52,7 +52,6 @@
         </div>
     {% else %}
         <p><center>No products found matching "{{ query }}"</center></p>
-        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     {% endif %}
 </div>
 

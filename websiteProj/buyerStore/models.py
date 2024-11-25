@@ -52,11 +52,11 @@ class Customer(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 class Product(models.Model):
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    description = models.CharField(max_length=250, default='', blank=True, null=True)
-    image = models.ImageField(upload_to='uploads/product/')
+    name = models.CharField(max_length=50, blank=False)
+    price = models.DecimalField(decimal_places=2, max_digits=6, blank=False)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=False)
+    description = models.CharField(max_length=1000, default='', blank=False)
+    image = models.ImageField(upload_to='uploads/product/', blank=False)
 
     # On Sale
     is_sale = models.BooleanField(default=False)
@@ -64,7 +64,7 @@ class Product(models.Model):
     
      # Seller
      # related_name='products': Adds a reverse relationship, allowing access all products of a seller with user.products.all().
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products', default=1) 
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products') 
 
 
 
@@ -72,6 +72,7 @@ class Product(models.Model):
         return self.name
 
 # Customer Orders
+"""
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete = models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete = models.CASCADE)
@@ -83,3 +84,4 @@ class Order(models.Model):
 
     def __str__(self):
         return self.product
+"""

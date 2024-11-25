@@ -1,60 +1,91 @@
 {% extends 'base.html' %}
 {% block content %}
+<!-- Header -->
 
-<!-- Header-->
- <header class="bg-dark py-1">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Order History</h1>
-            
+<div class="container mt-4">
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Recent Orders</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>${{ order.total }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td><a href="{% url 'buyer_order_details' order.id %}" class="btn btn-sm btn-info">View</a></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5">You have no orders.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Pagination Controls -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Previous</span>
+                        </li>
+                        {% endif %}
+                
+                        <!-- First Page -->
+                        {% if page_obj.number != first_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ first_page }}">First</a>
+                        </li>
+                        {% endif %}
+                
+                        <!-- Page Numbers -->
+                        {% for num in pages_to_show %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                
+                        <!-- Last Page -->
+                        {% if page_obj.number != last_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ last_page }}">Last</a>
+                        </li>
+                        {% endif %}
+                
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Next</span>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                
+
+            </div>
         </div>
     </div>
-</header>
-
-<div class="container">
-    <div class="row">
-        <center>
-            <div class="col-8">
-                <p align="justify">
-                    {% if orders %}
-                        {% for order in orders %}
-                            <div>
-                                Order ID: {{ order.id }}&nbsp |
-                                &nbspTotal: {{ order.total }}
-                                <br/>
-                                <br/>
-                                <br/>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div>
-                            <br/>
-                            <p>No orders found.</p>
-                        </div>
-                    {% endif %}
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-                    
-                                        
-                    <br/>
-                    <br/>
-                                        
-                    
-                </p>
-            </div>
-        </center>
-    </div>
+</div>
 </div>
 
 {% endblock %}

@@ -2,14 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from . models import Product, Category, Profile
 from django.contrib.auth import authenticate, login, logout # Login, Logout Authentication
 from django.contrib import messages
-from django.contrib.auth.models import User # Register new user
-from django.contrib.auth.forms import UserCreationForm
 from . forms import SignUpForm, UserInfoForm
-from django import forms
 import json
 from buyerCheckout.models import Order, OrderItem
 from cart.cart import Cart # from folder cart -> cart.py -> class Cart
-
+from django.core.paginator import Paginator
 
 def category(request, foo): # foo = category name
     # replace hyphens with spaces
@@ -19,10 +16,35 @@ def category(request, foo): # foo = category name
         # Look up the Category
         category = Category.objects.get(name=foo)
         products = Product.objects.filter(category=category)
-        return render(request, 'category.html', {'products':products, 'category':category})
+        filter_option = None
+        if request.method == "POST":
+            filter_option = request.POST.get('filter')
+            if filter_option == "option1":  # Price: Low to High
+                
+                products = sorted(
+                    products,
+                    key=lambda p: p.sale_price if p.is_sale else p.price
+                )
+            elif filter_option == "option2":  # Price: High to Low
+                
+                products = sorted(
+                    products,
+                    key=lambda p: p.sale_price if p.is_sale else p.price,
+                    reverse=True
+                )
+            elif filter_option == "option3":  # On Sale
+                products = Product.objects.filter(category=category, is_sale=True)
+                if not products:
+                    messages.error(request, "No Items on Sale")
+                    return redirect('category', foo=foo)
+                
+        
+        return render(request, 'category.html', {'products':products, 'category':category, 'filter_option': filter_option})
     except:
-        messages.success(request, ("That Category Does Not Exist"))
+        messages.error(request, ("That Category Does Not Exist"))
         return redirect('home')
+    
+    
 
 
 def product(request, pk):
@@ -175,27 +197,96 @@ def product_search(request):
 def order_history(request):
     if request.user.is_authenticated:
         if request.user.profile.account_type == 'seller':
-            messages.error(request, ("You are not allowed to view this page"))
+            messages.error(request, "You are not allowed to view this page")
             return redirect('home')
-        try:
 
-            orders = Order.objects.filter(user__id=request.user.id)
-            
-            print(orders)
-            return render(request, 'order_history.html', {'orders': orders})
-        except Order.DoesNotExist:
-            #return render(request, 'order_history.html', {})
-            pass
+        orders = Order.objects.filter(user=request.user).order_by('-created_at')  # Order by recent
 
+        # Implement pagination (5 orders per page)
+        paginator = Paginator(orders, 5)  
+        page_number = request.GET.get('page')  # Get the current page number from query params
+        page_obj = paginator.get_page(page_number)  # Get the current page
+
+        return render(request, 'order_history.html', {'orders': page_obj})
     else:
-        messages.error(request, ("Please Login to View Your Order History"))
         return redirect('login')
-"""
-def order_details(request, pk):
-    order = Order.objects.get(id=pk)
-    order_items = OrderItem.objects.filter(order=order)
-    return render(request, 'order_details.html', {'order': order, 'order_items': order_items})
-"""
-
-
     
+def compare(request, foo):
+    # Get all available products for the dropdown
+    foo = foo.replace('-', ' ')
+    category = Category.objects.get(name=foo)
+    products = Product.objects.filter(category=category)
+    
+    # Default to None if no comparison products are selected
+    compare_products = None
+
+    # Handle form submission to compare products
+    if request.GET.get('compare1') and request.GET.get('compare2'):
+        if request.GET['compare1'] == request.GET['compare2']:
+            messages.error(request, "Please Choose Two Different Products To Compare!")
+            # Return to the template with the error message and the same category/products
+            return render(request, 'compare.html', {
+                'products': products,
+                'category': category,
+                'compare_products': compare_products
+            })
+    
+        # Get the two selected products
+        product1 = Product.objects.get(id=request.GET['compare1'])
+        product2 = Product.objects.get(id=request.GET['compare2'])
+        compare_products = [product1, product2]
+
+    return render(request, 'compare.html', {
+        'products': products,       # List of all products for dropdown
+        'compare_products': compare_products,  # List of products to compare
+        'category': category,
+    })
+
+def buyer_order_details(request, order_id):
+    if request.user.is_authenticated:
+        if request.user.profile.account_type == 'seller':
+            messages.error(request, "You are not allowed to view this page")
+            return redirect('home')
+
+        # Get the order object and related order items
+        order = get_object_or_404(Order, id=order_id)
+        order_items = OrderItem.objects.filter(order=order)
+
+        # Prepare the order details
+        order_info = {
+            'fullname': order.full_name,
+            'address': f"{order.address1 or ''} {order.address2 or ''}".strip(),
+            'city': order.city,
+            'state': order.state,
+            'zipcode': order.zipcode,
+            'created_at': order.created_at,
+        }
+
+        # Group order items by seller
+        seller_products = {}
+        total_items = 0
+        
+        for order_item in order_items:
+            seller = order_item.product.seller
+            if seller not in seller_products:
+                seller_products[seller] = []
+            seller_products[seller].append(order_item)
+            total_items += order_item.quantity
+            
+
+        # Pass the data to the template
+        return render(request, 'buyer_order_details.html', {
+            'order_id': order.id,
+            'order_info': order_info,
+            'order_items': order_items,
+            'seller_products': seller_products,
+            'total_items': total_items,
+            
+            
+        })
+    else:
+        messages.error(request, "You must be Logged in.")
+        return redirect('home')
+    
+def contact(request):
+    return render(request, 'contact.html')

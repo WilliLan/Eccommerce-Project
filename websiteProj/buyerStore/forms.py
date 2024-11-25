@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User # Register new user
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
-from .models import Profile
+from .models import Profile, Product
 
 class UserInfoForm(forms.ModelForm):
     phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}), required=False)
@@ -60,3 +60,18 @@ class SignUpForm(UserCreationForm):
         # Save the account_type to the user's profile
         Profile.objects.update_or_create(user=user, defaults={'account_type': account_type})
         return user
+    
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ['name', 'price', 'category', 'description', 'image', 'is_sale', 'sale_price']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'is_sale': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'sale_price': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+

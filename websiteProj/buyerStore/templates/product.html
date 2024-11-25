@@ -2,8 +2,9 @@
 {% block content %}
 
 <div class="container">
-    <br/><br/><br/>
+    <br/>
     <div class="card mb-3">
+        <br/>
         <div class="row g-0">
             <div class="col-md-4">
                 <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="..." style="height:350px">
@@ -46,14 +47,16 @@
                     {% if user.profile.account_type != 'seller' %}
                         <button type="button" value="{{product.id}}" class="btn btn-secondary" id="add_cart"> Add To Cart</button>
                     {% endif %}
+                    <a href="{% url 'compare' product.category %}" class="btn btn-secondary">Compare</a>
                 </center>
                 </div>
             </div>
         </div>
     </div>
+    <p>Item Sold By: <strong>{{product.seller}}</strong></p>
 </div>
 
-<br/><br/><br/><br/><br/>
+
 
 <script>
     // javaScript

@@ -40,7 +40,7 @@
                                 <br/> ID: {{ product.id }}
                             {% endif %}
 
-                            <br/><br/><br/>
+                            <br/><br/>
                             <div class="row justify-content-center">
                                 <div class="col-md-2">Quantity:</div>
                                 <div class = "col-md-2">
@@ -73,11 +73,10 @@
             <h3> Total: ${{ totals }} </h3>
             <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
         </div>
-        <br/> <br/>
+        <br/>
     {% else %}
             <br/>
             There's Nothing In Your Cart...
-            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         
     {% endif %}
 </div>

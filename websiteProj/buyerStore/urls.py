@@ -12,6 +12,9 @@ urlpatterns = [
     path('update_info/', views.update_info, name='update_info'),
     path('search/', views.product_search, name='product_search'),
     path('order_history/', views.order_history, name='order_history'),
+    path('compare/<str:foo>', views.compare, name='compare'),
+    path('buyer_order_details/<int:order_id>', views.buyer_order_details, name='buyer_order_details'),
+    path('contact', views.contact, name='contact'),
 ]
 
 

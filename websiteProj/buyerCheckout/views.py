@@ -63,16 +63,16 @@ def checkout(request):
             total=totals,
         )
         # Create OrderItem for each product and quantity
-        
         for key, value in quantities.items():
             for product in cart_products:
                 if product.id == int(key):
+                    price = product.sale_price if product.is_sale else product.price
                     OrderItem.objects.create(
                     user=request.user if request.user.is_authenticated else None,
                     order=order,
                     product=product,
                     quantity=value,
-                    price=product.price*value,
+                    price=price*value,
                     )
 
         # Redirect to the payment success page
@@ -83,6 +83,7 @@ def checkout(request):
                     del request.session[key]
         else:
             request.session.flush()
+        Order.paid = True
         return render(request, 'buyerCheckout/payment_success.html', {'order_id': order.id, 'totals': order.total, 'cart_products': cart_products, 'quantities': quantities})
 
     context = {

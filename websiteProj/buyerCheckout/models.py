@@ -26,6 +26,8 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)  # Quantity of the product ordered
     price = models.DecimalField(max_digits=7, decimal_places=2)  # Price of the product
+    seller_ship = models.BooleanField(default=False)
+    tracking_number = models.CharField(max_length=255, blank=True, null=True)  # Add tracking number field
 
     def __str__(self):
         return f'OrderItem - {str(self.id)}'

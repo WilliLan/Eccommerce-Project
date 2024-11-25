@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Header-->
+{% if order_id %}
+</br></br>
+
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card mb-4">
+        
+            
+                <div class="card-header">
+                    <center>
+                    <label for="amount"><h6><strong>Confirm the details of shipment and items/quantity before confirming item shipments.</strong></h6></label>
+                    </center>   
+                </div>
+                <div class="card-body">
+                    
+                    
+                    <p><strong> Note! Confirming shipment will confirm for all items listed below connected to the order.</p></strong>
+                    <form method="POST" id="ship_confirm">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="tracking_number">Tracking Number</label>
+                            <input type="text" name="tracking_number" id="tracking_number" class="form-control" placeholder="Enter Tracking Number" required>
+                        </div>
+                        
+                        <center>
+                            <button type="submit" class="btn btn-success mt-3">Confirm</button>
+                    </form>
+                        <a href="{% url 'seller_dashboard' %}" class="btn btn-danger mt-3">Cancel</a>
+                        </center>
+                </div>
+            
+        </div>
+    </div>
+        <!-- Card for Order Summary -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <strong>Shipping Info</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>City</th>
+                                <th>State</th>
+                                <th>Zipcode</th>
+                                <th>Order-Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ order_info.fullname }}</td>
+                                <td>{{ order_info.address }}</td>
+                                <td>{{ order_info.city }}</td>
+                                <td>{{ order_info.state }}</td>
+                                <td>{{ order_info.zipcode }}</td>
+                                <td>{{ order_info.created_at }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card for Order Items -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Order Items</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Order-Item-ID</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order_item in order_items %}
+                            <tr>
+                                <td>{{ order_item.product.name }}</td>
+                                <td>{{ order_item.id }}</td>
+                                <td>{{ order_item.quantity }}</td>
+                                <td>{% if order_item.status %}Shipped{% else %}Pending{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <br/>
+</div>
+
+<br/><br/>
+{% else %} <!-- If order_id is not present -->
+    <script>
+        window.onload = function() {
+            window.location.href = "{% url 'home' %}";
+        };
+    </script>
+{% endif %}
+
+{% endblock %}

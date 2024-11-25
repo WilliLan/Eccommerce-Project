@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="bg-dark py-1">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Compare Products</h1>
+            <p class="lead fw-normal text-white-50 mb-0"></p>
+        </div>
+    </div>
+</header>
+<div class="container mt-4">
+
+
+    <!-- Product Selection Form -->
+    <form method="GET" action="{% url 'compare' category %}" class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <center>
+                        <label for="compare1" class="form-label"></label>
+                        <select name="compare1" id="compare1" class="form-select">
+                            <option value="" selected disabled>Please select an item</option>
+                            {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </center>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <center>
+                        <label for="compare2" class="form-label"></label>
+                        <select name="compare2" id="compare2" class="form-select">
+                            <option value="" selected disabled>Please select an item</option>
+                            {% for product in products %}
+                                <option value="{{ product.id }}">{{ product.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </center>
+                </div>
+            </div>
+        </div>
+
+        <center><button type="submit" class="btn btn-primary">Compare</button></center>
+    </form>
+
+    <!-- Display Comparison Results -->
+    {% if compare_products %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5>Comparison Results</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Sale</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in compare_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>${{ product.price }}</td>
+                        <td>{% if product.is_sale %}${{ product.sale_price }}{% else %}No{% endif %}</td>
+                        <td>{{ product.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br/><br/>
+    {% else %}
+    <div class="alert alert-info mt-4">
+        <p>Select two products to compare.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Bootstrap JS and Select2 for searchable dropdown -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // Initialize Select2 on the product selection dropdowns
+        $('#compare1').select2({
+            placeholder: 'Select the first product',
+            allowClear: true
+        });
+
+        $('#compare2').select2({
+            placeholder: 'Select the second product',
+            allowClear: true
+        });
+    });
+</script>
+
+{% endblock %}

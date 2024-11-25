@@ -43,7 +43,8 @@
             </div>
         </div>
     </div>
-{% else %} # If order_id is not present
+    <br/><br/>
+{% else %} <!--If order_id is not present-->
     <script>
         window.onload = function() {
             window.location.href = "{% url 'home' %}";
@@ -51,7 +52,4 @@
     </script>
 {% endif %}
 
-
-
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 {% endblock %}
