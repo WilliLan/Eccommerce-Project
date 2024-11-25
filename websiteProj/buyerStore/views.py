@@ -7,6 +7,7 @@ import json
 from buyerCheckout.models import Order, OrderItem
 from cart.cart import Cart # from folder cart -> cart.py -> class Cart
 from django.core.paginator import Paginator
+from sellerDashboard.models import Seller_Summary
 
 def category(request, foo): # foo = category name
     # replace hyphens with spaces
@@ -114,17 +115,24 @@ def login_user(request):
                 return redirect('home')
             
             elif account_type == 'seller':
-                if profile.approved == True:
-                    return redirect('seller_dashboard') 
+                if profile.approved and Seller_Summary.objects.filter(seller=user).exists():
+                    return redirect('seller_dashboard')
+                elif profile.approved:
+                    Seller_Summary.objects.create(
+                    seller=user,
+                    revenue=0,
+                    total_orders=0,
+                    total_balance=0,
+                    withdrawals=0
+                    )
+                    return redirect('seller_dashboard')  # Redirect after creating the summary
                 else:
                     logout(request)
-                    messages.error(request, ("Your account is not approved yet. Please wait for an Admin to approve your account."))
+                    messages.error(request, "Your account is not approved yet. Please wait for an Admin to approve your account.")
                     return redirect('home')
-            else: # admin
+            else:  # admin
                 return redirect('home')
 
-            
-        
         # Failed to login
         else:
             messages.error(request, ("Either your email or password was incorrect. Try again please!"))
