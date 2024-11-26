@@ -1,46 +1,41 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- Header-->
- <header class="bg-dark py-1">
-    <div class="container px-4 px-lg-5 my-5">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">About Us</h1>
-            <p class="lead fw-normal text-white-50 mb-0">Welcome to CowbellCoffee</p>
-        </div>
+<!-- Header -->
+<header class="bg-dark text-white py-5">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bolder">About Us</h1>
+        <p class="lead fw-normal text-white-50">Welcome to Cowbell Coffee</p>
     </div>
 </header>
 
-<div class="container">
-    <div class="row">
-        <center>
-            <div class="col-8">
-                <p align="justify">
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-
-                    <br/>
-                    <br/>
-                    
-                                        
-                    <br/>
-                    <br/>
-                                        
-                    <br/>
-                    <br/>
-                                        
-                    <br/>
-                    <br/>
-                </p>
+<!-- About Us Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h2 class="text-center fw-bold mb-4">Who We Are</h2>
+                        <p class="text-justify">
+                            We are Cowbell Coffee, and our mission is to bring you affordable coffee products from all your favorite brands! 
+                            From coffee makers and espresso machines to your favorite dark roast blend or creamer, you can find whatever 
+                            you’re looking for among our extensive catalog of products. With features such as comparison and search filters, 
+                            we make it easier to find the perfect product to brighten up your daily cup of coffee!
+                        </p>
+                        <p class="text-justify">
+                            Our name derives from the familiar ringing symbol of our university, Mississippi State University. During our time 
+                            at State, we decided to make it easier for people to access coffee products, and thus Cowbell Coffee was born!
+                        </p>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'home' %}" class="btn btn-primary btn-lg">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </center>
+        </div>
     </div>
-</div>
+</section>
+
 
 {% endblock %}
