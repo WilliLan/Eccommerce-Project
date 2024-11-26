@@ -16,70 +16,75 @@
 <div class="container">
     {% if cart_products %}
         {% for product in cart_products %}
-            <div class="card mb-3" style="height: 275px;">
-                <div class="row g-0">
-                    <div class="col-md-3">
-                        <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="..." style="height: 250px;">
+            <div class="card mb-3">
+                <div class="row g-0 align-items-center">
+                    <!-- Adjusted image container -->
+                    <div class="col-12 col-md-4 text-center">
+                        <img 
+                            src="{{ product.image.url }}" 
+                            class="img-fluid img-thumbnail product-image" 
+                            alt="Product Image">
                     </div>
-                    <div class="col-md-8">
+                    
+                    <div class="col-12 col-md-8">
+                    
                         <div class="card-body">
-                        <center>
-                            <h5 class="card-title"><strong>{{ product.name }}</strong></h5>
-                            <br/>
-                            
-
-                            {% if product.is_sale %}
-                                <div class="badge bg-danger text-white" >Sale!</div>
-                                <!-- Product price-->
-                                <strike> ${{ product.price }} </strike>
-                                <br/>
-                                ${{ product.sale_price }}
-
-                            {% else %}
-                                ${{ product.price }}
-                                <br/> ID: {{ product.id }}
-                            {% endif %}
-
-                            <br/><br/>
-                            <div class="row justify-content-center">
-                                <div class="col-md-2">Quantity:</div>
-                                <div class = "col-md-2">
-                                    <select class="form-select form-select-sm" id="select{{product.id}}">
-                                        
-                                            {% for key, value in quantities.items %} <!-- Python Dict {'3': 2, '4', 1} key is prod.id and value is qty-->
-                                                {% if key == product.id|slugify %} <!-- key is a str, product.id is a int, |slugify makes it comparable -->
-                                                    <option selected> <!-- Default shown in dropbox -->{{ value }}</option>
-                                                {% endif %}
-                                            {% endfor %}
-                                        
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                </div>
+                        
+                            <h5 class="card-title text-center "><strong>{{ product.name }}</strong></h5>
+                            <p class="text-center ">
+                                {% if product.is_sale %}
+                                    <span class="badge bg-danger text-white">Sale!</span>
+                                    <strike>${{ product.price }}</strike> ${{ product.sale_price }}
+                                {% else %}
+                                    ${{ product.price }}
+                                {% endif %}
+                            </p>
+                            <div class="d-flex justify-content-center  align-items-center">
+                                <span class="me-2">Quantity:</span>
+                                <select class="form-select form-select-sm w-auto" id="select{{ product.id }}">
+                                    {% for key, value in quantities.items %}
+                                        {% if key == product.id|slugify %}
+                                            <option selected>{{ value }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
                             </div>
-                            <br/>
-                            <button type="button" data-index="{{product.id}}" class="btn btn-secondary update-cart">Update</button>
-                            <button type="button" data-index="{{product.id}}" class="btn btn-danger delete-product">Remove</button>
-                        </center>
+                            <div class="d-flex justify-content-center  mt-3">
+                                <button type="button" data-index="{{ product.id }}" class="btn btn-secondary me-2 update-cart">Update</button>
+                                <button type="button" data-index="{{ product.id }}" class="btn btn-danger delete-product">Remove</button>
+                            </div>
+                        
                         </div>
+                    
                     </div>
+                
                 </div>
             </div>
-        {% endfor %} 
-        <div align="right">
-            <h3> Total: ${{ totals }} </h3>
+        {% endfor %}
+        <div class="text-end mb-5"> <!-- Add margin-bottom -->
+            <h3>Total: ${{ totals }}</h3>
             <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
         </div>
-        <br/>
     {% else %}
-            <br/>
-            There's Nothing In Your Cart...
-        
+        <p class="text-center">There's nothing in your cart...</p>
     {% endif %}
 </div>
+
+<!-- CSS for image resizing -->
+<style>
+    .product-image {
+        max-width: 100%; /* Ensure it does not exceed its container width */
+        max-height: 200px; /* Restrict height */
+        object-fit: cover; /* Maintain aspect ratio */
+    }
+</style>
+
+
 
 <script>
 // JS Update Cart

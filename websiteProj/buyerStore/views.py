@@ -211,11 +211,23 @@ def order_history(request):
         orders = Order.objects.filter(user=request.user).order_by('-created_at')  # Order by recent
 
         # Implement pagination (5 orders per page)
-        paginator = Paginator(orders, 5)  
+        paginator = Paginator(orders, 5)
         page_number = request.GET.get('page')  # Get the current page number from query params
         page_obj = paginator.get_page(page_number)  # Get the current page
 
-        return render(request, 'order_history.html', {'orders': page_obj})
+        # Calculate the first and last page, and pages to show for pagination
+        
+        first_page = 1
+        last_page = paginator.num_pages
+        pages_to_show = range(max(1, page_obj.number - 2), min(page_obj.number + 3, last_page + 1))
+
+        return render(request, 'order_history.html', {
+            'orders': page_obj,
+            'first_page': first_page,
+            'last_page': last_page,
+            'pages_to_show': pages_to_show,
+            'page_obj': page_obj,
+        })
     else:
         return redirect('login')
     

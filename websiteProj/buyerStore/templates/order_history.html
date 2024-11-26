@@ -38,6 +38,14 @@
                 <!-- Pagination Controls -->
                 <nav>
                     <ul class="pagination justify-content-center">
+                        <!-- First Page Link -->
+                        {% if page_obj.number != first_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ first_page }}">First</a>
+                        </li>
+                        {% endif %}
+                
+                        <!-- Previous Page Link -->
                         {% if page_obj.has_previous %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
@@ -48,13 +56,6 @@
                         </li>
                         {% endif %}
                 
-                        <!-- First Page -->
-                        {% if page_obj.number != first_page %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ first_page }}">First</a>
-                        </li>
-                        {% endif %}
-                
                         <!-- Page Numbers -->
                         {% for num in pages_to_show %}
                             <li class="page-item {% if page_obj.number == num %}active{% endif %}">
@@ -62,13 +63,7 @@
                             </li>
                         {% endfor %}
                 
-                        <!-- Last Page -->
-                        {% if page_obj.number != last_page %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ last_page }}">Last</a>
-                        </li>
-                        {% endif %}
-                
+                        <!-- Next Page Link -->
                         {% if page_obj.has_next %}
                         <li class="page-item">
                             <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
@@ -76,6 +71,13 @@
                         {% else %}
                         <li class="page-item disabled">
                             <span class="page-link">Next</span>
+                        </li>
+                        {% endif %}
+                
+                        <!-- Last Page Link -->
+                        {% if page_obj.number != last_page %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ last_page }}">Last</a>
                         </li>
                         {% endif %}
                     </ul>
