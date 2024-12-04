@@ -15,6 +15,8 @@ urlpatterns = [
     path('compare/<str:foo>', views.compare, name='compare'),
     path('buyer_order_details/<int:order_id>', views.buyer_order_details, name='buyer_order_details'),
     path('contact', views.contact, name='contact'),
+    path('return_item/<int:item_id>', views.return_item, name='return_item'),
+    path('cancel_item/<int:item_id>', views.cancel_item, name='cancel_item'),
 ]
 
 

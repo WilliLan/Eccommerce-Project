@@ -310,3 +310,32 @@ def buyer_order_details(request, order_id):
     
 def contact(request):
     return render(request, 'contact.html')
+
+def return_item(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id)
+    if request.user != item.user:
+        messages.error(request, 'This is not your order')
+        return redirect('home')
+    
+    if request.method == 'POST':
+        item.delete()
+        messages.success(request, 'Item Returned successfully!')
+        return redirect('buyer_order_details', item.order.id)  
+
+    # Render a confirmation page before Cancel
+    return render(request, 'return_item.html', {'item': item})
+
+def cancel_item(request, item_id):
+    item = get_object_or_404(OrderItem, id=item_id)
+    if request.user != item.user:
+        messages.error(request, 'This is not your order')
+        return redirect('home')
+    
+    if request.method == 'POST':
+        item.delete()
+        messages.success(request, 'Item Canceled successfully!')
+        return redirect('buyer_order_details', item.order.id)  
+
+    # Render a confirmation page before Cancel
+    return render(request, 'cancel_item.html', {'item': item})
+

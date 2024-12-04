@@ -60,7 +60,8 @@
                                 <th>Product</th>
                                 <th>Order-Item-ID</th>
                                 <th>QTY</th>
-                                <th>Tracking#</th>
+                                <th>Tracking</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -70,6 +71,7 @@
                                 <td>{{ order_item.id }}</td>
                                 <td>{{ order_item.quantity }}</td>
                                 <td>{% if order_item.seller_ship %}{{order_item.tracking_number}}{% else %}Pending{% endif %}</td>
+                                
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -1,29 +1,46 @@
 from pathlib import Path
 import os
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 from dotenv import load_dotenv
 
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load environmental variables
-load_dotenv()
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4w7(+66*nc50$76bs!2xb#_&-#l+u@u7lf)j-rv13rl9dud(pz'
+SECRET_KEY = os.environ['DJANGO_PROJ_S_KEY']
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app', 'cowbellcoffee.store', 'https://cowbellcoffee.store','127.0.0.1' ]
+ALLOWED_HOSTS = ['group2-production.up.railway.app', 'https://group2-production.up.railway.app', 'cowbellcoffee.store', 'https://cowbellcoffee.store']
 CSRF_TRUSTED_ORIGINS = ['https://group2-production.up.railway.app', 'https://cowbellcoffee.store']
 
 # settings.py
 
 # Application definition
+
+
+
+cloudinary.config(
+    cloud_name=os.environ['CLOUDINARY_CLOUD_NAME'],
+    api_key=os.environ['CLOUDINARY_API_KEY'],
+    api_secret=os.environ['CLOUDINARY_API_SECRET'],
+)
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -131,6 +148,7 @@ STATICFILES_DIRS = ['static/']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 MEDIA_URL = 'media/' # uploaded images go to media directory
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # find url that is base_dir add media directory onto that and puts the images into media dir
 
