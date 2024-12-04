@@ -32,8 +32,6 @@ CSRF_TRUSTED_ORIGINS = ['https://group2-production.up.railway.app', 'https://cow
 
 # Application definition
 
-
-
 cloudinary.config(
     cloud_name=os.environ['CLOUDINARY_CLOUD_NAME'],
     api_key=os.environ['CLOUDINARY_API_KEY'],
