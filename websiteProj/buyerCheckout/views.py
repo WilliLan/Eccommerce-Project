@@ -63,6 +63,8 @@ def checkout(request):
             total=totals,
         )
         # Create OrderItem for each product and quantity
+       
+            
         for key, value in quantities.items():
             for product in cart_products:
                 if product.id == int(key):

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if order_items %}
 <!-- Header-->
 <header class="bg-dark py-1">
     <div class="container px-4 px-lg-5 my-5">
@@ -64,6 +65,7 @@
                                 <th>Order Item ID</th>
                                 <th>Quantity</th>
                                 <th>Tracking#</th>
+                                <th>Return/Cancel</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -73,6 +75,7 @@
                                 <td>{{ order_item.id }}</td>
                                 <td>{{ order_item.quantity }}</td>
                                 <td>{% if order_item.seller_ship %}{{order_item.tracking_number}}{% else %}Not Shipped{% endif %}</td>
+                                <td>{% if order_item.seller_ship %}<a href="{% url 'return_item' order_item.id %}" class="btn btn-outline-danger btn-sm">Return</a>{% else %}<a href="{% url 'cancel_item' order_item.id %}" class="btn btn-outline-danger btn-sm">Cancel</a>{% endif %}</th>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -93,4 +96,12 @@
 </div>
 
 <br/><br/>
+{% else %}
+<br/><br/><br/>
+    <center>
+        <h1> All items in the order has been returned or canceled.</h1>
+        <a href="{% url 'order_history' %}" class="btn btn-primary">Back to Order History</a>
+    </center>
+{% endif %}
+
 {% endblock %}
