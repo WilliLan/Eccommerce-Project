@@ -1,5 +1,5 @@
 # Group2
-
+# Official Website Link: https://cowbellcoffee.store
 ## Team Members: 
 ###	| Name | Github UserName |  Role  |
    _____________________________________
@@ -22,11 +22,11 @@
 		
 		When registering a user has a choice to select buyer account or seller account. The seller account is a business account to list their businesses' coffee products.
 ###	Features:
-	Unregistered Users are able to browse and compare products, along with being able to read verified customer reviews.
+	Unregistered Users are able to browse, buy, and compare products.
 
 	Registered Users: When registering a user has a choice to select buyer account or seller account
-		Buyer: Buyer accounts contain same functionalities as unregistered users along with being able to add products to cart and checkout.
-		Seller: Seller accounts contain the same functionalities as unregisterd users along with being able to list products to sale for their business.
+		Buyer: Buyer accounts contain same functionalities as unregistered users along with being able to add products to cart, return items, cancel items, checkout, view 	orders, etc.
+		Seller: Seller accounts contain the same functionalities as unregisterd users along with being able to list products to sale for their business, edit products, remove products, view sales report, withdraw, etc.
 
 	Admin has the capability to monitor the platform and execute necessary powers.
 
